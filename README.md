@@ -21,9 +21,11 @@ python -m http.server 8000
 
 ## 배포
 
+**https://digital-namecard-blond.vercel.app**
+
 Vercel에 정적 사이트로 배포합니다. 프레임워크 프리셋은 **Other**,
 빌드 명령 없음, 출력 디렉터리는 저장소 루트입니다.
-`main` 브랜치에 푸시하면 자동으로 재배포됩니다.
+저장소가 Vercel 프로젝트에 연결되어 있어 `main` 브랜치에 푸시하면 자동으로 재배포됩니다.
 
 ## 내용 수정하기
 
