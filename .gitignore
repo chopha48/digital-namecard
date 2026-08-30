@@ -1,0 +1,13 @@
+# Vercel
+.vercel
+
+# 의존성 (현재는 없지만 나중에 추가될 경우 대비)
+node_modules/
+
+# OS / 편집기
+Thumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,464 @@
+/* ---------------------------------------------------------
+   디지털 명함 — 스타일시트
+   외부 라이브러리 없음 / 순수 CSS
+   --------------------------------------------------------- */
+
+/* ---------- 디자인 토큰 (라이트 모드 기본) ---------- */
+:root {
+  color-scheme: light;   /* 스크롤바 등 브라우저 기본 UI도 테마를 따라가게 */
+
+  /* 배경 그라데이션: 흰색 → 연한 파란색 */
+  --bg-from: #ffffff;
+  --bg-to: #c8dcf7;
+  --bg-glow: rgba(59, 91, 253, 0.10);
+
+  --surface: #ffffff;
+  --surface-2: #f4f6fa;
+  --border: #e2e6ee;
+  --text: #131720;
+  --text-muted: #5d6779;
+  --text-faint: #8b94a6;
+  --accent: #3b5bfd;
+  --accent-soft: rgba(59, 91, 253, 0.1);
+  --accent-text: #ffffff;
+
+  /* 4단 레이어로 쌓은 부드러운 그림자 */
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04),
+            0 6px 12px -4px rgba(16, 24, 40, 0.06),
+            0 18px 32px -12px rgba(16, 24, 40, 0.10),
+            0 40px 72px -24px rgba(23, 43, 99, 0.20);
+  --shadow-hover: 0 1px 2px rgba(16, 24, 40, 0.04),
+                  0 10px 20px -6px rgba(16, 24, 40, 0.08),
+                  0 28px 48px -14px rgba(16, 24, 40, 0.13),
+                  0 56px 96px -28px rgba(23, 43, 99, 0.26);
+  --chip-glow: rgba(59, 91, 253, 0.32);
+
+  --radius: 24px;
+  --radius-sm: 14px;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ---------- 다크 모드 ---------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* 배경 그라데이션: 진한 남색 → 검정 */
+  --bg-from: #101a38;
+  --bg-to: #04060b;
+  --bg-glow: rgba(124, 147, 255, 0.13);
+
+  --surface: #151922;
+  --surface-2: #1c212c;
+  --border: #272d3a;
+  --text: #f2f4f8;
+  --text-muted: #a3adc0;
+  --text-faint: #6f7a8d;
+  --accent: #7c93ff;
+  --accent-soft: rgba(124, 147, 255, 0.14);
+  --accent-text: #0a0c11;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5),
+            0 8px 16px -6px rgba(0, 0, 0, 0.45),
+            0 24px 44px -14px rgba(0, 0, 0, 0.6),
+            0 48px 88px -28px rgba(0, 0, 0, 0.75);
+  --shadow-hover: 0 1px 2px rgba(0, 0, 0, 0.5),
+                  0 12px 24px -8px rgba(0, 0, 0, 0.5),
+                  0 34px 60px -16px rgba(0, 0, 0, 0.65),
+                  0 64px 110px -30px rgba(0, 0, 0, 0.85);
+  --chip-glow: rgba(124, 147, 255, 0.38);
+}
+
+/* ---------- 리셋 ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 5vw, 48px);
+
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
+               "Apple SD Gothic Neo", "Malgun Gothic", Roboto, sans-serif;
+  color: var(--text);
+
+  /* 은은한 배경 그라데이션 — 위에서 아래로 흐르고, 은은한 빛 두 점을 얹었다.
+     fixed 로 고정해 스크롤해도 그라데이션이 따라 움직이지 않는다. */
+  background:
+    radial-gradient(900px 620px at 12% -8%, var(--bg-glow), transparent 62%),
+    radial-gradient(760px 540px at 108% 106%, var(--bg-glow), transparent 58%),
+    linear-gradient(165deg, var(--bg-from) 0%, var(--bg-to) 100%);
+  background-attachment: fixed;
+  background-color: var(--bg-to);   /* 그라데이션 미지원 환경 대비 */
+  transition: background-color 0.45s var(--ease), color 0.35s var(--ease);
+}
+
+h1, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+
+/* ---------- 테마 토글 ---------- */
+.theme-toggle {
+  position: fixed;
+  top: clamp(14px, 3vw, 28px);
+  right: clamp(14px, 3vw, 28px);
+  z-index: 10;
+
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 24, 40, 0.08);
+  transition: transform 0.2s var(--ease), color 0.2s, border-color 0.2s,
+              background-color 0.35s var(--ease);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.07);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.theme-toggle:active { transform: scale(0.94); }
+
+.icon {
+  position: absolute;
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  transition: opacity 0.28s var(--ease), transform 0.4s var(--ease);
+}
+
+/* 라이트일 때는 달(=다크로 전환), 다크일 때는 해를 보여준다 */
+.icon-sun  { opacity: 0; transform: rotate(-70deg) scale(0.5); }
+.icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+
+:root[data-theme="dark"] .icon-sun  { opacity: 1; transform: rotate(0) scale(1); }
+:root[data-theme="dark"] .icon-moon { opacity: 0; transform: rotate(70deg) scale(0.5); }
+
+/* ---------- 명함 카드 ---------- */
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  padding: clamp(28px, 7vw, 44px) clamp(20px, 6vw, 36px) clamp(24px, 6vw, 34px);
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+
+  /* backwards: 등장 애니메이션이 끝난 뒤 transform 을 붙잡고 있지 않아야
+     아래 :hover 의 transform 이 정상적으로 먹는다 (both 로 두면 덮어쓴다) */
+  animation: rise 0.7s var(--ease) backwards;
+  transition: background-color 0.35s var(--ease), border-color 0.35s var(--ease),
+              box-shadow 0.45s var(--ease), transform 0.45s var(--ease);
+}
+
+/* 카드에 마우스를 올리면 그림자가 조금 더 깊어지며 살짝 떠오른다 */
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+}
+
+.card-glow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.9;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 프로필 ---------- */
+.profile { text-align: center; }
+
+.avatar {
+  width: clamp(112px, 32vw, 132px);
+  aspect-ratio: 1;
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.avatar img,
+.avatar-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.name {
+  font-size: clamp(26px, 7vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.role {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 13px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+}
+
+.org {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ---------- 핵심 정보 그리드 ---------- */
+.key-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 24px;
+}
+
+/* 이메일 · 핸드폰은 한 줄 전체를 차지해 눈에 잘 띄게 */
+.key-grid > :nth-child(3),
+.key-grid > :nth-child(4) { grid-column: 1 / -1; }
+
+.key-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: inherit;
+  text-decoration: none;
+
+  transition: transform 0.18s var(--ease), border-color 0.18s,
+              background-color 0.18s;
+}
+
+a.key-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+a.key-item:active { transform: translateY(0); }
+
+.key-icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.key-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.key-body {
+  min-width: 0;            /* 긴 값이 칸을 밀어내지 않도록 */
+  text-align: left;
+}
+
+.key-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.key-value {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- 소개 ---------- */
+.bio {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-muted);
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* ---------- 링크 칩 ---------- */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 13px;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+
+  transition: transform 0.22s var(--ease), color 0.22s var(--ease),
+              background-color 0.22s var(--ease), border-color 0.22s var(--ease),
+              box-shadow 0.22s var(--ease);
+}
+
+.link-chip svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.22s var(--ease);
+}
+
+/* SNS 버튼 hover — 살짝 커지면서 강조색으로 채워진다 */
+a.link-chip:hover,
+a.link-chip:focus-visible {
+  transform: translateY(-3px) scale(1.07);
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px -4px var(--chip-glow);
+}
+
+a.link-chip:hover svg { transform: scale(1.12) rotate(-4deg); }
+
+a.link-chip:active { transform: translateY(-1px) scale(1.02); }
+
+.link-chip.is-static { cursor: default; }
+
+/* ---------- 버튼 ---------- */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  flex: 1;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), opacity 0.18s, border-color 0.18s;
+}
+
+.btn:hover { transform: translateY(-2px); border-color: var(--accent); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-primary:hover { opacity: 0.92; }
+
+/* ---------- 포커스 링 (키보드 접근성) ---------- */
+.key-item:focus-visible,
+.link-chip:focus-visible,
+.theme-toggle:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- 토스트 ---------- */
+.toast {
+  margin-top: 14px;
+  min-height: 18px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+
+.toast.show { opacity: 1; }
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 400px) {
+  .key-grid { grid-template-columns: 1fr; }   /* 좁은 화면에서는 한 줄에 하나씩 */
+  .actions { flex-direction: column; }
+  .key-item { padding: 11px 12px; }
+}
+
+/* 모션 최소화 선호 시 애니메이션 제거 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 인쇄용 */
+@media print {
+  .theme-toggle, .actions, .toast { display: none; }
+  body { background: #fff; padding: 0; }
+  .card { box-shadow: none; border-color: #ddd; }
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>김민수 · 디지털 명함</title>
+  <meta name="description" content="김민수 · 마케팅 매니저 디지털 명함" />
+
+  <!-- 모바일 브라우저 상단 바 색을 배경 그라데이션 시작색과 맞춘다 (script.js 가 갱신) -->
+  <meta id="themeColor" name="theme-color" content="#ffffff" />
+
+  <!-- 첫 페인트 '전에' 테마를 정한다.
+       이 코드가 없으면 다크 모드 사용자에게 흰 배경이 한 번 번쩍인 뒤 남색으로 바뀐다.
+       style.css 보다 먼저, 그리고 body 렌더링 전에 실행되어야 하므로 head 에 인라인으로 둔다. -->
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("namecard-theme"); } catch (e) { /* 사생활 보호 모드 */ }
+      var prefersDark = window.matchMedia &&
+                        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
+    })();
+  </script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="다크 모드로 전환">
+    <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5" />
+      <g class="rays">
+        <line x1="12" y1="1.5" x2="12" y2="4" />
+        <line x1="12" y1="20" x2="12" y2="22.5" />
+        <line x1="1.5" y1="12" x2="4" y2="12" />
+        <line x1="20" y1="12" x2="22.5" y2="12" />
+        <line x1="4.2" y1="4.2" x2="6" y2="6" />
+        <line x1="18" y1="18" x2="19.8" y2="19.8" />
+        <line x1="19.8" y1="4.2" x2="18" y2="6" />
+        <line x1="6" y1="18" x2="4.2" y2="19.8" />
+      </g>
+    </svg>
+    <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2Z" />
+    </svg>
+  </button>
+
+  <main class="card">
+    <div class="card-glow" aria-hidden="true"></div>
+
+    <!-- ===== 프로필 ===== -->
+    <header class="profile">
+      <div class="avatar">
+        <!-- 직접 찍은 사진으로 바꾸려면 아래 svg 를 지우고 이 줄의 주석을 푸세요.
+             <img src="photo.jpg" alt="김민수 프로필 사진" /> -->
+        <svg class="avatar-art" viewBox="0 0 120 120" role="img"
+             aria-label="파란색 블루탱 물고기 일러스트">
+          <defs>
+            <radialGradient id="sea" cx="35%" cy="25%" r="85%">
+              <stop offset="0%" stop-color="#8ee3f5" />
+              <stop offset="100%" stop-color="#1f7fb8" />
+            </radialGradient>
+            <linearGradient id="scale" x1="0" y1="0" x2="0.3" y2="1">
+              <stop offset="0%" stop-color="#4aa8ee" />
+              <stop offset="55%" stop-color="#2563c9" />
+              <stop offset="100%" stop-color="#173a94" />
+            </linearGradient>
+            <linearGradient id="fin" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffd75e" />
+              <stop offset="100%" stop-color="#f2a33c" />
+            </linearGradient>
+          </defs>
+
+          <!-- 물속 배경 -->
+          <circle cx="60" cy="60" r="60" fill="url(#sea)" />
+          <circle cx="30" cy="26" r="5"   fill="#ffffff" opacity=".30" />
+          <circle cx="44" cy="16" r="2.6" fill="#ffffff" opacity=".24" />
+          <circle cx="96" cy="90" r="3.4" fill="#ffffff" opacity=".20" />
+
+          <!-- 꼬리지느러미 -->
+          <path d="M84 60 L112 40 Q104 60 112 82 Z" fill="url(#fin)" />
+          <!-- 등지느러미 / 배지느러미 -->
+          <path d="M46 39 Q58 22 78 36 Z" fill="url(#fin)" opacity=".95" />
+          <path d="M48 82 Q60 98 78 84 Z" fill="url(#fin)" opacity=".95" />
+
+          <!-- 몸통 -->
+          <ellipse cx="57" cy="60" rx="33" ry="25" fill="url(#scale)" />
+          <!-- 몸통 무늬 -->
+          <path d="M58 38 Q76 60 58 82 Q72 60 58 38 Z" fill="#0d2a6b" opacity=".55" />
+          <path d="M30 48 Q46 60 30 72 Q40 60 30 48 Z" fill="#0d2a6b" opacity=".35" />
+          <!-- 가슴지느러미 -->
+          <ellipse cx="60" cy="70" rx="10" ry="6" fill="#1b4fb0"
+                   transform="rotate(18 60 70)" />
+
+          <!-- 눈 -->
+          <circle cx="39" cy="53" r="10" fill="#ffffff" />
+          <circle cx="37" cy="54" r="5"  fill="#16233d" />
+          <circle cx="35" cy="52" r="1.9" fill="#ffffff" />
+          <!-- 입 -->
+          <path d="M27 66 Q32 70 37 67" stroke="#0d2a6b" stroke-width="2"
+                fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <h1 class="name">김민수</h1>
+      <p class="role">마케팅 매니저</p>
+      <p class="org">스타트업 허브</p>
+    </header>
+
+    <!-- ===== 핵심 정보: 팀 · 담당업무 · 이메일 · 핸드폰 ===== -->
+    <section class="key-grid" aria-label="핵심 정보">
+      <div class="key-item">
+        <span class="key-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.5" r="2.4"/><path d="M15.6 19a5.4 5.4 0 0 1 4.9-5.4"/></svg>
+        </span>
+        <span class="key-body">
+          <span class="key-label">팀</span>
+          <span class="key-value">마케팅팀</span>
+        </span>
+      </div>
+
+      <div class="key-item">
+        <span class="key-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2.8" y="7" width="18.4" height="13" rx="2.4"/><path d="M8.5 7V5.4A1.6 1.6 0 0 1 10.1 3.8h3.8A1.6 1.6 0 0 1 15.5 5.4V7"/><path d="M2.8 12.4h18.4"/></svg>
+        </span>
+        <span class="key-body">
+          <span class="key-label">담당업무</span>
+          <span class="key-value">마케팅 매니저</span>
+        </span>
+      </div>
+
+      <a class="key-item" href="mailto:minsu@example.com">
+        <span class="key-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 6.5 9 6.5 9-6.5"/></svg>
+        </span>
+        <span class="key-body">
+          <span class="key-label">이메일</span>
+          <span class="key-value">minsu@example.com</span>
+        </span>
+      </a>
+
+      <a class="key-item" href="tel:01012345678">
+        <span class="key-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.58 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .58 3.6 1 1 0 0 1-.25 1Z"/></svg>
+        </span>
+        <span class="key-body">
+          <span class="key-label">핸드폰</span>
+          <span class="key-value">010-1234-5678</span>
+        </span>
+      </a>
+    </section>
+
+    <!-- ===== 소개 ===== -->
+    <p class="bio">5년차 B2B 마케터. 콘텐츠 마케팅과 그로스 해킹을 좋아합니다. 커피와 자동화 도구를 사랑합니다.</p>
+
+    <!-- ===== 링크 ===== -->
+    <section class="links" aria-label="링크">
+      <a class="link-chip" href="https://linkedin.com/in/minsu-kim" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7.5 10.5V17M7.5 7.4v.1M11.5 17v-3.8a2.3 2.3 0 0 1 4.6 0V17"/></svg>
+        링크드인
+      </a>
+      <a class="link-chip" href="https://github.com/minsu-dev" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 20.4c-4.4 1.3-4.4-2.4-6.2-2.9m12.4 5.3v-3.6a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.4 5.5-6a4.7 4.7 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.6 4.2 5.5 4.5 5.5 4.5a4.3 4.3 0 0 0-.1 3.2A4.7 4.7 0 0 0 4 11c0 4.5 2.8 5.6 5.5 6a3 3 0 0 0-.8 2.3v3.6"/></svg>
+        깃허브
+      </a>
+      <a class="link-chip" href="https://minsu.dev" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.2 9h17.6M3.2 15h17.6M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></svg>
+        블로그
+      </a>
+      <span class="link-chip is-static">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        서울, 대한민국
+      </span>
+    </section>
+
+    <!-- ===== 버튼 ===== -->
+    <footer class="actions">
+      <button class="btn btn-primary" id="saveContact" type="button">연락처 저장 (vCard)</button>
+      <button class="btn" id="shareBtn" type="button">명함 공유</button>
+    </footer>
+
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
